@@ -36,6 +36,7 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   image_picker: ^0.8.7+4
   quickalert: ^1.0.1
+  tflite: ^1.1.2
 
 dev_dependencies:
   flutter_test:
