@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:quickalert/quickalert.dart';
+import 'package:tflite/tflite.dart';
 
 void main() {
   runApp(const MyApp());
@@ -39,6 +40,7 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   File? image;
+  List? result;
 
   showPermAlert() {
     QuickAlert.show(
@@ -69,6 +71,35 @@ class _HomeState extends State<Home> {
     }
   }
 
+  loadModel() async {
+    await Tflite.loadModel(model: 'assets/model.tflite', labels: 'assets/labels.txt');
+  }
+
+  runModel() async {
+    var res = await Tflite.runModelOnImage(
+        path: image!.path,
+        numResults: 5,
+        threshold: .5,
+        imageMean: 127.5,
+        imageStd: 127.5);
+
+    setState(() {
+      result = res;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    loadModel();
+  }
+
+  @override
+  void dispose() async {
+    super.dispose();
+    Tflite.close();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -87,29 +118,38 @@ class _HomeState extends State<Home> {
                 : Image.asset("assets/logo.png"),
             Column(
               children: [
-                image == null
-                    ? ElevatedButton.icon(
-                        onPressed: camImage,
-                        icon: const Icon(Icons.camera_alt),
-                        label: const Text('Capture Image'))
+                result == null
+                    ? (image == null
+                        ? ElevatedButton.icon(
+                            onPressed: camImage,
+                            icon: const Icon(Icons.camera_alt),
+                            label: const Text('Capture Image'))
+                        : ElevatedButton.icon(
+                            onPressed: () {
+                              setState(() => image = null);
+                            },
+                            icon: const Icon(Icons.cancel),
+                            label: const Text('Cancel selection')))
+                    :Container(padding: EdgeInsets.only(bottom: 10), child: Text(result?[0]['label'].toString().toUpperCase()??'No Chilly Recogonized', style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold),)),
+                const SizedBox(height: 10),
+                result == null
+                    ? (image == null
+                        ? ElevatedButton.icon(
+                            style: const ButtonStyle(),
+                            onPressed: galImage,
+                            icon: const Icon(Icons.image),
+                            label: const Text('Image from Gallery'))
+                        : ElevatedButton.icon(
+                            onPressed: runModel,
+                            icon: const Icon(Icons.check_circle_rounded),
+                            label: const Text('Submit')))
                     : ElevatedButton.icon(
                         onPressed: () {
-                          setState(() => image = null);
+                          setState(() {result = null; image = null;});
+
                         },
-                        icon: const Icon(Icons.cancel),
-                        label: const Text('Cancel selection'),
-                      ),
-                const SizedBox(height: 10),
-                image == null
-                    ? ElevatedButton.icon(
-                        style: const ButtonStyle(),
-                        onPressed: galImage,
-                        icon: const Icon(Icons.image),
-                        label: const Text('Image from Gallery'))
-                    : ElevatedButton.icon(
-                        onPressed: () {},
-                        icon: const Icon(Icons.check_circle_rounded),
-                        label: const Text('Submit')),
+                        icon: const Icon(Icons.replay_rounded),
+                        label: const Text('Select new image.')) ,
               ],
             )
           ],
