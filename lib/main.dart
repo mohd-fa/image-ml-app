@@ -130,7 +130,7 @@ class _HomeState extends State<Home> {
                             },
                             icon: const Icon(Icons.cancel),
                             label: const Text('Cancel selection')))
-                    :Container(padding: EdgeInsets.only(bottom: 10), child: Text(result?[0]['label'].toString().toUpperCase()??'No Chilly Recogonized', style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold),)),
+                    :Container(padding: EdgeInsets.only(bottom: 10), child: Text(result?.isNotEmpty ?? false ? result![0]['label'].toString().toUpperCase():'No Chilly Recogonized', style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold),)),
                 const SizedBox(height: 10),
                 result == null
                     ? (image == null
