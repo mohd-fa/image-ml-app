@@ -1,12 +1,14 @@
-bajji chilli
-habanero chilli
-jalapeno  chilli
-red chilli
-kanthari chilli
-green chilli
-curd chilli
-green bell pepper
-yellow bell pepper
-red bell pepper 
-kashmiri chilli
-ball chilli
+Bajji Chilli
+Ball Chilli
+Capsicum
+Chilli Not Found
+Curd Chilli
+Green Bell Pepper
+Green Chilli
+Habanero Chilli
+Jalapeno Chilli
+Kanthari Chilli
+Kashmiri Chilli
+Red Bell Pepper
+Red Chilli
+Yellow Bell Pepper

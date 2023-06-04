@@ -78,7 +78,7 @@ class _HomeState extends State<Home> {
   runModel() async {
     var res = await Tflite.runModelOnImage(
         path: image!.path,
-        numResults: 11,
+        numResults: 14,
         threshold: .5,
         imageMean: 127.5,
         imageStd: 127.5);
